@@ -12,10 +12,11 @@ Changes are categorized as follows:
 
 ## [Unreleased]
 
-* 2 minor enhancements:
+* 3 minor enhancements:
 
   * deps: add mocha
   * docs: expand README
+  * js: add migration logic
 
 ## 2018-01-14, Version 0.1.0 (unstable)
 
