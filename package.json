@@ -4,7 +4,8 @@
   "description": "Migrate db migrations.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --no-colors"
+    "test": "mocha --no-colors",
+    "test-watch": "mocha --no-colors --watch"
   },
   "repository": {
     "type": "git",
@@ -16,10 +17,24 @@
     "migrations",
     "middleware"
   ],
+  "files": [
+    "package.json",
+    "README.md",
+    "LICENSE.txt",
+    "CHANGELOG.md",
+    "index.js",
+    "test.js"
+  ],
   "author": "Andy Bettisworth <andy@accreu.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/wurde/schema-migrations/issues"
   },
-  "homepage": "https://github.com/wurde/schema-migrations#readme"
+  "homepage": "https://github.com/wurde/schema-migrations#readme",
+  "engines": {
+    "node": ">= 8"
+  },
+  "devDependencies": {
+    "mocha": "^4.1.0"
+  }
 }
