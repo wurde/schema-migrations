@@ -14,8 +14,7 @@
   "keywords": [
     "db",
     "schema",
-    "migrations",
-    "middleware"
+    "migrations"
   ],
   "files": [
     "package.json",
