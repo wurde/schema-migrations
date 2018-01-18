@@ -10,45 +10,19 @@ Add the package to your project using the npm ecosystem:
 $ npm install schema-migrations --save
 ```
 
-Then use within an Express app.
+Then use:
 
 ```javascript
-'use strict'
+const SchemaMigrations = require('schema-migrations')
+const base = path.join(__dirname, '..', '..')
+const db = path.join(base, 'config', 'db')
 
-/**
- * Dependencies
- */
+let schema_migrations = new SchemaMigrations(base, db)
 
-const express = require('express')
-const schema_migrations = require('schema-migrations')
-const path = require('path')
-
-/**
- * Initialize app
- */
-
-const app = express()
-
-/**
- * Constants
- */
-
-const base = path.join(__dirname, '..')
-
-/**
- * Locals
- */
-
-app.locals.base = base
-app.locals.db = require('./db')(app)
-
-/**
- * Initializers
- */
-
-schema_migrations(app.locals.base, app.locals.db)
-
-...
+schema_migrations.run()
+  .catch((err) => {
+    console.error(err)
+  })
 ```
 
 ## Changelog
