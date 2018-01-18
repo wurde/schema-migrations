@@ -12,6 +12,12 @@ Changes are categorized as follows:
 
 ## [Unreleased]
 
+## 2018-01-18, Version 1.1.0
+
+* 1 minor enhancement:
+
+  * encapsulate login in a class
+
 ## 2018-01-15, Version 1.0.0
 
 * 1 major enhancement:
