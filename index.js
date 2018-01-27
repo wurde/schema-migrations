@@ -12,9 +12,10 @@ const fs = require('fs')
  */
 
 class SchemaMigrations {
-  constructor(base=undefined, db=undefined) {
+  constructor(base=undefined, db=undefined, close=true) {
     this.base = base
     this.db = db
+    this.close = close
     this.schema_migrations = []
     this.migration_file_versions = []
     this.migration_files = {}
@@ -35,7 +36,9 @@ class SchemaMigrations {
     await this.collect_all_schema_migrations()
     await this.collect_all_migration_files()
     await this.run_pending_migrations()
-    this.db.end()
+    if (this.close) {
+      this.db.end()
+    }
     return true
   }
 

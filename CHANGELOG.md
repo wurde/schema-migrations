@@ -12,6 +12,12 @@ Changes are categorized as follows:
 
 ## [Unreleased]
 
+## 2018-01-27, Version 1.2.0
+
+* 1 minor enhancement:
+
+  * option to skip closing db pool
+
 ## 2018-01-18, Version 1.1.0
 
 * 1 minor enhancement:
