@@ -13,16 +13,45 @@ $ npm install schema-migrations --save
 Then use:
 
 ```javascript
-const SchemaMigrations = require('schema-migrations')
-const base = path.join(__dirname, '..', '..')
-const db = path.join(base, 'config', 'db')
+"use strict"
 
-let schema_migrations = new SchemaMigrations(base, db)
+module.exports = async (app) => {
+  /**
+   * Dependencies
+   */
 
-schema_migrations.run()
-  .catch((err) => {
+  const SchemaMigrations = require("schema-migrations")
+
+  /**
+   * Constants
+   */
+
+  const base = app.locals.base
+  const db = app.locals.db
+
+  /**
+   * Configure schema migrations.
+   */
+
+  let config = {
+    type: "postgresql",
+    close: false
+  }
+
+  /**
+   * Run any pending migrations.
+   */
+
+  let schema_migrations = new SchemaMigrations(base, db, config)
+
+  try {
+    await schema_migrations.run()
+  } catch(err) {
     console.error(err)
-  })
+  }
+
+  return true
+}
 ```
 
 ## Changelog
