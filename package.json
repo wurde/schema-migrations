@@ -17,8 +17,7 @@
     "README.md",
     "LICENSE.txt",
     "CHANGELOG.md",
-    "index.js",
-    "test.js"
+    "index.js"
   ],
   "author": "Andy Bettisworth <andy@accreu.com>",
   "license": "MIT",
