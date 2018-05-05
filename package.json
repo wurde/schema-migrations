@@ -1,12 +1,8 @@
 {
   "name": "schema-migrations",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Migrate db migrations.",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha --no-colors",
-    "test-watch": "mocha --no-colors --watch"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wurde/schema-migrations.git"
@@ -32,8 +28,5 @@
   "homepage": "https://github.com/wurde/schema-migrations#readme",
   "engines": {
     "node": ">= 8"
-  },
-  "devDependencies": {
-    "mocha": "^4.1.0"
   }
 }

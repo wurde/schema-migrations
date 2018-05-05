@@ -12,6 +12,13 @@ Changes are categorized as follows:
 
 ## [Unreleased]
 
+## 2018-05-04, Version 2.0.0
+
+* 2 minor enhancements:
+
+  * support sqlite and postgresql
+  * deps: remove mocha
+
 ## 2018-01-27, Version 1.2.0
 
 * 1 minor enhancement:
