@@ -12,6 +12,12 @@ Changes are categorized as follows:
 
 ## [Unreleased]
 
+## 2018-05-04, Version 2.1.0
+
+* 1 minor enhancement:
+
+  * improve readme
+
 ## 2018-05-04, Version 2.0.0
 
 * 2 minor enhancements:
