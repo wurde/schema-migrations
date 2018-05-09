@@ -95,7 +95,7 @@ class SchemaMigrations {
    */
 
   async create_if_not_exists_schema_migrations() {
-      await this.db.query(`
+    await this.db.query(`
 BEGIN TRANSACTION;
 
 CREATE TABLE IF NOT EXISTS schema_migrations (
@@ -103,8 +103,7 @@ CREATE TABLE IF NOT EXISTS schema_migrations (
 );
 
 COMMIT;
-      `)
-    }
+    `)
   }
 
   /**

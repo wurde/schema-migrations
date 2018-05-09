@@ -12,6 +12,12 @@ Changes are categorized as follows:
 
 ## [Unreleased]
 
+## 2018-05-09, Version 3.0.1
+
+* 1 bug fix
+
+  * correct indentation
+
 ## 2018-05-09, Version 3.0.0
 
 * 1 major enhancement:
