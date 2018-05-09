@@ -8,22 +8,19 @@ const path = require("path")
 const fs = require("fs")
 
 /**
- * Define SchemaMigrations class
+ * Define SchemaMigrations class.
  */
 
 class SchemaMigrations {
-  constructor(base, db, config={}) {
+  constructor(base, db, type) {
     this.base = base
     this.db = db
-    if (config.type === "sqlite") {
-      this.type = "sqlite"
-    } else {
-      this.type = "postgresql"
-    }
-    this.close = config.close
+    this.type = type
+
     this.schema_migrations = []
     this.migration_file_versions = []
     this.migration_files = {}
+
     this.check_base_directory()
     this.check_db_interface()
   }
@@ -80,9 +77,6 @@ class SchemaMigrations {
     await this.collect_all_schema_migrations()
     await this.collect_all_migration_files()
     await this.run_pending_migrations()
-    if (this.close) {
-      this.db.end()
-    }
     return true
   }
 
@@ -90,7 +84,6 @@ class SchemaMigrations {
    * Create table if not exists schema_migrations.
    *
    * @method
-   * @return {Boolean} - does it exist?
    * @public
    */
 
@@ -99,7 +92,7 @@ class SchemaMigrations {
 BEGIN TRANSACTION;
 
 CREATE TABLE IF NOT EXISTS schema_migrations (
-  version text PRIMARY KEY
+  version numeric PRIMARY KEY
 );
 
 COMMIT;
@@ -115,18 +108,18 @@ COMMIT;
 
   async collect_all_schema_migrations() {
     if (this.type === "postgresql") {
-      let result = await this.db.query("SELECT version FROM schema_migrations;")
+      let results = await this.db.query("SELECT version FROM schema_migrations ORDER BY version ASC;")
 
-      for (let i=0; i < result.rows.length; i++) {
-        this.schema_migrations.push(result.rows[i].version)
+      for (let i=0; i < results.rows.length; i++) {
+        this.schema_migrations.push(Number.parseInt(results.rows[i].version))
       }
     }
 
     if (this.type === "sqlite") {
-      let result = await this.db.prepare("SELECT version FROM schema_migrations;").all()
+      let results = await this.db.prepare("SELECT version FROM schema_migrations ORDER BY version ASC;").all()
 
-      for (let i=0; i < result.length; i++) {
-        this.schema_migrations.push(result[i].version)
+      for (let i=0; i < results.length; i++) {
+        this.schema_migrations.push(Number.parseInt(results[i].version))
       }
     }
   }
@@ -140,12 +133,20 @@ COMMIT;
 
   async collect_all_migration_files() {
     let files = fs.readdirSync(path.join(this.base, "db", "migrations"))
+    let migrations = []
 
     for (let i=0; i < files.length; i++) {
       if (/\d+/.test(files[i])) {
-        this.migration_file_versions.push(files[i].match(/\d+/)[0])
-        this.migration_files[files[i].match(/\d+/)[0]] = files[i]
+        let version = Number.parseInt(files[i].match(/\d+/)[0])
+        migrations.push({ version: version, filename: files[i] })
       }
+    }
+
+    migrations.sort(function(a, b) { return a.version - b.version })
+
+    for (let i=0; i < migrations.length; i++) {
+      this.migration_file_versions.push(migrations[i].version)
+      this.migration_files[migrations[i].version] = migrations[i].filename
     }
   }
 
@@ -157,27 +158,13 @@ COMMIT;
    */
 
   async run_pending_migrations() {
-    if (this.type === "postgresql") {
-      for (let i=0; i < this.migration_file_versions.length; i++) {
-        if (!this.schema_migrations.includes(this.migration_file_versions[i])) {
-          let filename = this.migration_files[this.migration_file_versions[i]]
-          let result = await require(path.join(this.base, "db", "migrations", filename))(this.db)
+    for (let i=0; i < this.migration_file_versions.length; i++) {
+      if (!this.schema_migrations.includes(this.migration_file_versions[i])) {
+        let filename = this.migration_files[this.migration_file_versions[i]]
+        let result = await require(path.join(this.base, "db", "migrations", filename))(this.db)
 
-          if (result === false) { return false }
-          await this.save_version_to_db(this.migration_file_versions[i])
-        }
-      }
-    }
-
-    if (this.type === "sqlite") {
-      for (let i=0; i < this.migration_file_versions.length; i++) {
-        if ((i + 1) > this.schema_migrations.length) {
-          let filename = this.migration_files[this.migration_file_versions[i]]
-          let result = await require(path.join(this.base, "db", "migrations", filename))(this.db)
-
-          if (result === false) { return false }
-          await this.save_version_to_db(this.migration_file_versions[i])
-        }
+        if (result === false) { return false }
+        await this.save_version_to_db(this.migration_file_versions[i])
       }
     }
   }
@@ -186,17 +173,17 @@ COMMIT;
    * Save version to database.
    *
    * @method
-   * @param {String} version - version to save to the db.
+   * @param {Number} version - version to save to the db.
    * @public
    */
 
   async save_version_to_db(version) {
     if (this.type === "postgresql") {
-      await this.db.query("INSERT INTO schema_migrations (version) VALUES ($1::bigint);", [version])
+      await this.db.query("INSERT INTO schema_migrations (version) VALUES ($1);", [version])
     }
 
     if (this.type === "sqlite") {
-      await this.db.query("INSERT INTO schema_migrations DEFAULT VALUES;")
+      await this.db.prepare("INSERT INTO schema_migrations (version) VALUES ($version)").run({ version: version })
     }
   }
 }

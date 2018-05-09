@@ -1,7 +1,7 @@
 {
   "name": "schema-migrations",
-  "version": "3.0.1",
-  "description": "Migrate db migrations.",
+  "version": "4.0.0",
+  "description": "Run database migrations.",
   "main": "index.js",
   "repository": {
     "type": "git",
