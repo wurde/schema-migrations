@@ -12,6 +12,12 @@ Changes are categorized as follows:
 
 ## [Unreleased]
 
+## 2018-05-09, Version 3.0.0
+
+* 1 major enhancement:
+
+  * use text data type for sqlite compatibility
+
 ## 2018-05-04, Version 2.1.0
 
 * 1 minor enhancement:

@@ -95,24 +95,11 @@ class SchemaMigrations {
    */
 
   async create_if_not_exists_schema_migrations() {
-    if (this.type === "postgresql") {
       await this.db.query(`
 BEGIN TRANSACTION;
 
 CREATE TABLE IF NOT EXISTS schema_migrations (
-  version bigint PRIMARY KEY
-);
-
-COMMIT;
-      `)
-    }
-
-    if (this.type === "sqlite") {
-      await this.db.query(`
-BEGIN TRANSACTION;
-
-CREATE TABLE IF NOT EXISTS schema_migrations (
-  version integer PRIMARY KEY
+  version text PRIMARY KEY
 );
 
 COMMIT;
